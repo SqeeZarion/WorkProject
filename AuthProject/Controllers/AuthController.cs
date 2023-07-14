@@ -73,7 +73,7 @@ public class AuthController : ControllerBase
         };
 
         foreach (var role in user.UserTypeRole)
-            claims.Add(new Claim("role", role.ToString()));
+            claims.Add(new Claim("UserTypeRole", role.ToString()));
 
         //используется для передачи информации между двумя сторонами в виде JSON-объекта.
         //JWT - это безопасный стандартный формат, который используется для передачи утверждений между сторонами,

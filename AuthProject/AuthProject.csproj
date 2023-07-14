@@ -20,6 +20,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-preview.5.23280.8" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
+        <PackageReference Include="TwentyTwenty.Mvc" Version="1.10.0" />
     </ItemGroup>
 
 </Project>
