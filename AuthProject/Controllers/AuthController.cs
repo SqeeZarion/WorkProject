@@ -1,10 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Database;
+using WebApplication1.Interface;
 using WebApplication3.Models;
 using WebAuthCommon;
 
@@ -19,12 +17,14 @@ public class AuthController : ControllerBase
 {
    
     private readonly DBConnection connection;
-    private readonly IOptions<AuthOption> authOptions;
+    private ITokenService authOption;
+    private IOptions<AuthToken> authToken;
    
-    public AuthController(IOptions<AuthOption> authOptions, DBConnection connection)
+    public AuthController(ITokenService authOption, DBConnection connection, IOptions<AuthToken> authToken)
     {
         this.connection = connection;
-        this.authOptions = authOptions;
+        this.authOption = authOption;
+        this.authToken = authToken;
     }
 
     [Route("login")] // вказує на шлях URL-адреси, за яким клієнт може зробити HTTP-запит до сервера.
@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
             if (user == null)
                 return NotFound(new { Message = "User not Found" });
             //Generate token
-            var token = GenerateJWT(user);
+            var token = authOption.GenerateJWT(user);
 
             return Ok(new
             {
@@ -53,42 +53,6 @@ public class AuthController : ControllerBase
         return Unauthorized(); //помилка 401
     }
 
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public string GenerateJWT(UserAccount user)
-    {
-        var authParams = authOptions.Value;
-
-        var securityKey = authParams.GetSymmetricSecurityKey();
-
-        //облікові дані
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-
-        //список об'єктів для генерації токена
-
-        var claims = new List<Claim>()
-        {
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-        };
-
-        foreach (var role in user.UserTypeRole)
-            claims.Add(new Claim("UserTypeRole", role.ToString()));
-
-        //используется для передачи информации между двумя сторонами в виде JSON-объекта.
-        //JWT - это безопасный стандартный формат, который используется для передачи утверждений между сторонами,
-        //такими как серверы и приложения, и может быть использован для аутентификации и авторизации.
-
-        //Конструктор JwtSecurityToken принимает несколько параметров,
-        //включая Issuer (выдавший токен), Audience (адресат токена), claims (утверждения токена),
-        //expires (время истечения срока действия токена) и signingCredentials
-        //(информация о подписи, используемая для подписи токена)
-        var token = new JwtSecurityToken(authParams.Issuer, authParams.Audience,
-            claims, expires: DateTime.Now.AddSeconds(authParams.TokenLifetime),
-            signingCredentials: credentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
     //токен для авторизованого користувача
 
     [Route("register")] // вказує на шлях URL-адреси, за яким клієнт може зробити HTTP-запит до сервера.

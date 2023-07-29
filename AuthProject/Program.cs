@@ -1,7 +1,9 @@
-using System.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+
 using WebApplication1.Database;
+using WebApplication1.Interface;
+using WebApplication1.Models;
+using WebApplication1.Services;
 using WebAuthCommon;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,13 +26,20 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<IPasswordService, PasswordService>();
 
-//використовуємо GetSection для отримання розділу конфігурації з назвою "AuthOptions".
+//використовуємо GetSection для отримання розділу конфігурації з назвою "AuthTokenAcess".
 var authOptionsConfiguration = configuration.GetSection("AuthOption");
+var encryptConfiguration = configuration.GetSection("Encrypt");
 
 //для налаштування типу AuthOptions з використанням значень, отриманих з authOptionsConfiguration.
-builder.Services.Configure<AuthOption>(authOptionsConfiguration);
-builder.Services.AddScoped<AuthOption>();
+builder.Services.Configure<AuthToken>(authOptionsConfiguration);
+builder.Services.AddScoped<AuthToken>();
+
+builder.Services.Configure<EncryptOptions>(encryptConfiguration);
+builder.Services.AddScoped<EncryptOptions>();
+
 builder.Services.AddDbContext<DBConnection>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 32)),
