@@ -18,13 +18,14 @@ public class AuthController : ControllerBase
    
     private readonly DBConnection connection;
     private ITokenService authOption;
-    private IOptions<AuthToken> authToken;
-   
-    public AuthController(ITokenService authOption, DBConnection connection, IOptions<AuthToken> authToken)
+    private IPasswordService passwordService;
+    
+    public AuthController(ITokenService authOption, DBConnection connection, IPasswordService passwordService)
     {
         this.connection = connection;
         this.authOption = authOption;
-        this.authToken = authToken;
+        this.passwordService = passwordService;
+
     }
 
     [Route("login")] // вказує на шлях URL-адреси, за яким клієнт може зробити HTTP-запит до сервера.
@@ -63,6 +64,11 @@ public class AuthController : ControllerBase
         {
             //Generate token
             // UserRepository.RegisterUser(user);
+            user.UserId = Guid.NewGuid();
+            user.Password = passwordService.Encode(user.Password);
+            user.UserTypeRole = "User";
+            // user.Token
+            
             await connection.Users.AddAsync(user);
             await connection.SaveChangesAsync();
             return Ok(new

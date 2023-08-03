@@ -15,25 +15,23 @@ namespace WebApplication1.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Email = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Token = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserTypeRole = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
-                })
+                    name: "Users",
+                    columns: table => new
+                    {
+                        UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                        Email = table.Column<string>(type: "longtext", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        Password = table.Column<string>(type: "longtext", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        UserName = table.Column<string>(type: "longtext", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4"),
+                        UserTypeRole = table.Column<string>(type: "longtext", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4")
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_Users", x => x.UserId);
+                    })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
 

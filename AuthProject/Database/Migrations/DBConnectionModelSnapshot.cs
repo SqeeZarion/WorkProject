@@ -33,10 +33,6 @@ namespace WebApplication1.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("longtext");

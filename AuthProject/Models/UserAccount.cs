@@ -12,29 +12,18 @@ public class UserAccount
     public string Password { get; set; }
     public string UserName { get; set; }
     
-    public string Token { get; set; }
-    public string UserTypeRole { get; set; }
+    public string? UserTypeRole { get; set; }
 
-    public UserAccount(string email, string password, string userName)
-    {
-        Email = email;
-        Password = password;
-        UserName = userName;
-    }
-    
     public UserAccount()
     {
         // Код для ініціалізації властивостей за замовчуванням
     }
     
     [JsonConstructor]
-    public UserAccount(Guid userId, string email, string password, string userName, string token, string userTypeRole)
+    public UserAccount(string email, string password, string userName)
     {
-        UserId = userId;
         Email = email;
         Password = password;
         UserName = userName;
-        Token = token;
-        UserTypeRole = userTypeRole;
     }
 }

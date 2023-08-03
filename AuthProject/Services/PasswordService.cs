@@ -21,12 +21,23 @@ public class PasswordService : IPasswordService
         this.encryptOptions = encryptOptions.Value;
     }
 
+    private byte[] convertBytes(string eny)
+    {
+        string[] hexValues = eny.Split(", ");
+        
+        byte[] byteArray = new byte[hexValues.Length];
+        for (int i = 0; i < hexValues.Length; i++)
+            byteArray[i] = Convert.ToByte(hexValues[i], 16);
+
+        return byteArray;
+    }
     
     public string Encode(string password)
     {
         string encryptKey = encryptOptions.Key;
-        byte encryptSalt = encryptOptions.Salt;
+        string encryptSalt = encryptOptions.Salt;
 
+        byte[] byteSalt = convertBytes(encryptSalt);
         byte[] passwordBytes = Encoding.Unicode.GetBytes(password);
 
         using (Aes encryptor = Aes.Create())
@@ -34,7 +45,7 @@ public class PasswordService : IPasswordService
             
             //допомагає отримати ключ і вектор ініціалізації (IV) з основного ключа encryptKey та солі encryptSalt.
             //Rfc2898DeriveBytes використовує алгоритм PBKDF2 для отримання ключа та вектора ініціалізації із початкових даних.
-            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(encryptKey, encryptSalt);
+            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(encryptKey, byteSalt);
 
             //ключ довжиною 32 байти, тобто AES-256.
             encryptor.Key = pdb.GetBytes(32);
@@ -49,7 +60,6 @@ public class PasswordService : IPasswordService
                     cr.Write(passwordBytes, 0, passwordBytes.Length);
                     cr.Close();
                 }
-
                 
                 string encryptedPassword = Convert.ToBase64String(ms.ToArray());
                 return encryptedPassword;
@@ -61,13 +71,14 @@ public class PasswordService : IPasswordService
     public string Decrypt(string encryptedPassword)
     {
         string encryptKey = encryptOptions.Key;
-        byte encryptSalt = encryptOptions.Salt;
-
+        string encryptSalt = encryptOptions.Salt;
+        
+        byte[] byteSalt = convertBytes(encryptSalt);
         byte[] passwordBytes = Convert.FromBase64String(encryptedPassword);
 
         using (Aes encryptor = Aes.Create())
         {
-            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(encryptKey, encryptSalt);
+            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(encryptKey, byteSalt);
             encryptor.Key = pdb.GetBytes(32);
             encryptor.IV = pdb.GetBytes(16);
 
