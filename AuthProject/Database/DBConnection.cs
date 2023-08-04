@@ -5,11 +5,12 @@ namespace WebApplication1.Database
 {
     public class DBConnection : DbContext
     {
-        protected  void disconnect(){}
+        
         public DBConnection(DbContextOptions<DBConnection> options) : base(options)
         {
-
+    
         }
+        
         
         public DbSet<UserAccount> Users { get; set; }
 
