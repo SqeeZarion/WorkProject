@@ -10,7 +10,6 @@ namespace WebApplication1.Database
         {
 
         }
-
         
         public DbSet<UserAccount> Users { get; set; }
 
