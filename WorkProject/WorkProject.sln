@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkProject", "WorkProject\WorkProject.csproj", "{F1232DFD-FADD-4433-BB2C-8B76CFE92AC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyMusic", "SpotifyMusic\SpotifyMusic.csproj", "{F1232DFD-FADD-4433-BB2C-8B76CFE92AC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
