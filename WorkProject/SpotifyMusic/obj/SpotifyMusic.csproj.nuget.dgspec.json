@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[7.0.17, )"
             },
+            "SpotifyApi.NetCore": {
+              "target": "Package",
+              "version": "[3.5.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
