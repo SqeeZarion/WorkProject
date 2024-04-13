@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[7.0.17, )"
             },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "SpotifyApi.NetCore": {
               "target": "Package",
               "version": "[3.5.0, )"
