@@ -43,10 +43,6 @@ D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\Sp
 D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\ref\SpotifyMusic.dll
 D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Google.Api.CommonProtos.dll
 D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Google.Protobuf.dll
-D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Google.ProtocolBuffers.Serialization.dll
-D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Google.ProtocolBuffers.dll
 D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.Client.dll
-D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Jokersoft.AspNetCore.Grpc.JsonTranscoding.dll
-D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
-D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
-D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.AspNetCore.Server.ClientFactory.dll
+D:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.ClientFactory.dll
