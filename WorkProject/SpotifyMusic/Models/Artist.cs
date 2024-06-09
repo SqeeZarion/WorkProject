@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SpotifyApi.NetCore;
 
 namespace SpotifyWebApi.Models;
 
 public class Artist
 {
-    [Key]
-    public int ArtistId { get; set; }
-    public string ArtistFname { get; set; }
-    public string ArtistLname { get; set; }
-    public string ArtistDescr { get; set; } // TODO: biographiya
-    public DateTime ArtistBirthDate { get; set; }
+    public ExternalUrls external_urls { get; set; }
+    public string href { get; set; }
+    public string id { get; set; }
+    public string name { get; set; }
+    public string type { get; set; }
+    public string uri { get; set; }
 }
 
 public class ArtistAct //Виступи
