@@ -47,19 +47,25 @@ builder.Services.AddDbContext<DbConnection>(options =>
 
 builder.Services.AddGrpc();
 builder.Services.AddSingleton<ITokenService, TokenService>();
-builder.Services.AddHttpClient<SpotifyAlbumsGrpcService>(client =>
+builder.Services.AddHttpClient<NewReleasesGrpcService>(client =>
 {
+    //базова адресу для всіх запитів
     client.BaseAddress = new Uri("https://api.spotify.com/v1/");
+    //базовим класом для обробки HTTP-запитів та відповідей, додає AuthorizationHandler до ланцюжка обробки запитів HttpClient.
+    // Ланцюжок обробників
+    // Коли HttpClient надсилає запит, він проходить через всі зареєстровані обробники (DelegatingHandler), перш ніж дійти до кінцевої точки.
+    //     Кожен обробник може змінювати запит, додавати заголовки, логувати інформацію тощо.
+    //     Після обробки запиту обробники також можуть обробляти відповідь перед тим, як вона буде повернута клієнту.
 }).AddHttpMessageHandler(provider => 
     new AuthorizationHandler(provider.GetRequiredService<ITokenService>()));
 
 builder.Services.AddTransient<AuthorizationHandler>();  
 
-builder.Services.AddSingleton<SpotifyAlbumsGrpcClient>(provider =>
+builder.Services.AddSingleton<NewReleasesGrpcClient>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
     var grpcServiceUrl = config["GrpcServiceUrl"];
-    return new SpotifyAlbumsGrpcClient(grpcServiceUrl!);
+    return new NewReleasesGrpcClient(grpcServiceUrl!);
 });
 
 // //Взаємодія з альбомами 
@@ -72,7 +78,7 @@ builder.Services.AddSingleton<SpotifyAlbumsGrpcClient>(provider =>
 
 var app = builder.Build();
 
-app.MapGrpcService<SpotifyAlbumsGrpcService>();
+app.MapGrpcService<NewReleasesGrpcService>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

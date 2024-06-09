@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SpotifyWebApi.Models;
 
-public class AlbumSpotify
+public class SpotifyAlbumsResponse
 {
     public Albums albums { get; set; }
-    
 }
 
 public class Items
