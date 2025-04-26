@@ -3,4 +3,6 @@
 public interface ITokenService
 {
     Task<string> GetAccessTokenAsync();
+
+    Task SaveAccessTokenAsync(string accessToken, int expiresIn);
 }

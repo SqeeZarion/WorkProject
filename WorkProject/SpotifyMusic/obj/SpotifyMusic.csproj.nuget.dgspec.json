@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj": {}
+    "E:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj": {}
   },
   "projects": {
-    "D:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj": {
+    "E:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj",
+        "projectUniqueName": "E:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj",
         "projectName": "SpotifyMusic",
-        "projectPath": "D:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj",
+        "projectPath": "E:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\SpotifyMusic.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\obj\\",
+        "outputPath": "E:\\projects\\workProject\\WorkProject\\WorkProject\\SpotifyMusic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -78,6 +78,12 @@
               "version": "[7.0.8, )"
             },
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.17, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.17, )"
             },

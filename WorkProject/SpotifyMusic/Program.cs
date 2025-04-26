@@ -1,4 +1,5 @@
 using System.Data.Common;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using SpotifyWebApi.Interface;
 using SpotifyWebApi.Models;
@@ -31,11 +32,11 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();                                                      
         });
 });
-
-builder.Services.AddDbContext<DbConnection>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 32)),
-        mySqlOptionsAction => mySqlOptionsAction.EnableRetryOnFailure()));
+// БД ПОТІМ НАЛОШТУЙ
+// builder.Services.AddDbContext<DbConnection>(options =>
+//     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+//         new MySqlServerVersion(new Version(8, 0, 32)),
+//         mySqlOptionsAction => mySqlOptionsAction.EnableRetryOnFailure()));
 
 
 // //аутентифікації користувачів Spotify
@@ -45,17 +46,21 @@ builder.Services.AddDbContext<DbConnection>(options =>
 //         c.BaseAddress = new Uri("https://accounts.spotify.com/api/");
 //     });
 
+
 builder.Services.AddGrpc();
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
+
+//HttpClient використовується для відправки запитів до якогось сервісу
 builder.Services.AddHttpClient<NewReleasesGrpcService>(client =>
 {
     //базова адресу для всіх запитів
     client.BaseAddress = new Uri("https://api.spotify.com/v1/");
-    //базовим класом для обробки HTTP-запитів та відповідей, додає AuthorizationHandler до ланцюжка обробки запитів HttpClient.
-    // Ланцюжок обробників
-    // Коли HttpClient надсилає запит, він проходить через всі зареєстровані обробники (DelegatingHandler), перш ніж дійти до кінцевої точки.
-    //     Кожен обробник може змінювати запит, додавати заголовки, логувати інформацію тощо.
-    //     Після обробки запиту обробники також можуть обробляти відповідь перед тим, як вона буде повернута клієнту.
+    
+    // Він отримує access token з ITokenService.
+    // Додає його в заголовок Authorization: Bearer <access_token>.
+    // Потім передає запит далі по ланцюжку.
 }).AddHttpMessageHandler(provider => 
     new AuthorizationHandler(provider.GetRequiredService<ITokenService>()));
 
@@ -67,6 +72,17 @@ builder.Services.AddSingleton<NewReleasesGrpcClient>(provider =>
     var grpcServiceUrl = config["GrpcServiceUrl"];
     return new NewReleasesGrpcClient(grpcServiceUrl!);
 });
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    // Порт для HTTP/2 (gRPC)
+    options.ListenLocalhost(5101, o => o.Protocols = HttpProtocols.Http1AndHttp2); 
+    
+    // Порт для HTTP/1.1 (Swagger)
+    options.ListenLocalhost(5100, o => o.Protocols = HttpProtocols.Http1AndHttp2); 
+});
+
+
 
 // //Взаємодія з альбомами 
 // builder.Services.AddHttpClient<ISpotifyAlbumsService, SpotifyAlbumRepos>(

@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using WorkProject.Auth.Interface;
 using WorkProject.Auth.Models;
 
@@ -16,6 +18,14 @@ public class TokenService : ITokenService
         _httpClient = httpClient;
         _configuration = configuration;
     }
+    
+    public async Task SaveAccessTokenAsync(string accessToken, int expiresIn)
+    {
+        _currentAccessToken = accessToken;
+        _tokenExpiryTime = DateTime.UtcNow.AddSeconds(expiresIn - 30);
+        
+        //добав збереження в бд
+    }           
 
     public async Task<string> GetAccessTokenAsync()
     {
@@ -24,16 +34,16 @@ public class TokenService : ITokenService
             var clientId = _configuration["SpotifyAuth:ClientId"];
             var clientSecret = _configuration["SpotifyAuth:ClientSecret"];
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token")
-            {
-                Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    {"grant_type", "client_credentials"},
-                    {"client_id", clientId},
-                    {"client_secret", clientSecret}
-                })
-            };
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}")));
 
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "grant_type", "client_credentials" }
+            });
+
+            Console.WriteLine($"Sending token request: client_id={clientId}, client_secret={clientSecret}");
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
@@ -46,5 +56,4 @@ public class TokenService : ITokenService
         }
         return _currentAccessToken;
     }
-
 }

@@ -11,6 +11,7 @@ public class DbConnection : DbContext
     }
     
     public DbSet<Tracks> Tracks { get; set; }
+    public DbSet<Album> Albums { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

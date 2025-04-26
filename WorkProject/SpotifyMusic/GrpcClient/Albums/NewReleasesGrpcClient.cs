@@ -5,6 +5,9 @@ using NewReleasesService = Spotify.NewReleasesService;
 
 namespace WorkProject.GrpcClient;
 
+// (репозиторій приймає запити ззовні й зєднює з сервісом)
+// Клієнт здійснює віддалені виклики до сервера, передаючи потрібні дані і отримуючи відповіді,
+// які потім можуть використовуватись у клієнтській програмі.
 public class NewReleasesGrpcClient
 {
     private readonly NewReleasesService.NewReleasesServiceClient _client;

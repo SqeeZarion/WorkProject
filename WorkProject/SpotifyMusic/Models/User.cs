@@ -14,6 +14,7 @@ public class User
     public DateTime BirthDate { get; set; }
     public string City { get; set; }
     public int ZipCode { get; set; }
+    public string refreshToken { get; set; }
     
     [ForeignKey("Country")]
     public int CountryId { get; set; }
