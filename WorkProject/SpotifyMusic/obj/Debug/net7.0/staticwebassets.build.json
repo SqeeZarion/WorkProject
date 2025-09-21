@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "6qsPbPVBTppq2ZesIAadtPCVcXHRnc3KeKF+cIduX0o=",
+  "Hash": "y3ydj4wUolA+DE99LOdmq3LNcJwDKuXs/AmodybBR84=",
   "Source": "SpotifyMusic",
   "BasePath": "_content/SpotifyMusic",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

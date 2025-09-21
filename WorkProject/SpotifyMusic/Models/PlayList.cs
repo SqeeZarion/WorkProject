@@ -12,6 +12,7 @@ public class PlayList
     public byte[] PlayListPicture { get; set; }
     public DateTime CreationDate { get; set; }
     
+     
     [ForeignKey("PlayListType")]
     public int PlayListTypeId { get; set; }
     

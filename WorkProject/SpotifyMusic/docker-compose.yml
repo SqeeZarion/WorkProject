@@ -1,0 +1,38 @@
+﻿version: "3.9"
+
+services:
+  myapp:
+    build: .
+    ports: ["5100:5100","5101:5101"]
+    env_file:
+      - Configuration.docker.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: mopsik_tawerka08
+      MYSQL_DATABASE: SpotifySystem
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -pmopsik_tawerka08 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    ports:
+      - "3306:3306"     # потрібно, якщо інколи конектитимешся з хоста/Rider
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
+    driver: bridge

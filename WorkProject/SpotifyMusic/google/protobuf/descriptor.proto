@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package google.protobuf;
+
+option java_package = "com.google.protobuf";
+option java_outer_classname = "DescriptorProtos";
+option csharp_namespace = "Google.Protobuf.Reflection";
+option go_package = "google.golang.org/protobuf/types/descriptorpb";
+option objc_class_prefix = "GPB";
+
+message FileDescriptorSet {
+  repeated FileDescriptorProto file = 1;
+}
+
+message FileDescriptorProto {
+  optional string name = 1;
+  optional string package = 2;
+}

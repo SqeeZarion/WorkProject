@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using SpotifyWebApi.Database;
 using WorkProject.Auth.Interface;
 using WorkProject.Auth.Models;
 
@@ -12,22 +13,16 @@ public class TokenService : ITokenService
     private readonly IConfiguration _configuration; // для отримання конфіденційних даних з appsettings.json
     private string _currentAccessToken;
     private DateTime _tokenExpiryTime;
+    private readonly DbConnection _db;
 
-    public TokenService(HttpClient httpClient, IConfiguration configuration)
+    public TokenService(HttpClient httpClient, IConfiguration configuration, DbConnection db)
     {
         _httpClient = httpClient;
         _configuration = configuration;
+        _db = db;
     }
-    
-    public async Task SaveAccessTokenAsync(string accessToken, int expiresIn)
-    {
-        _currentAccessToken = accessToken;
-        _tokenExpiryTime = DateTime.UtcNow.AddSeconds(expiresIn - 30);
-        
-        //добав збереження в бд
-    }           
 
-    public async Task<string> GetAccessTokenAsync()
+    public async Task<string> GetAccessTokenAsync(int userId = 0)
     {
         if (DateTime.UtcNow >= _tokenExpiryTime || string.IsNullOrEmpty(_currentAccessToken))
         {

@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WorkProject.Models.External;
 
 namespace SpotifyWebApi.Models;
 
-public class SpotifyAlbumsResponse
-{
-    public Albums albums { get; set; }
-}
 
 public class Items
 {
@@ -30,8 +27,8 @@ public class Items
     public int popularity { get; set; }
     public string album_group { get; set; }
     public Artists[] artists { get; set; }
-    public List<Track> items { get; set; }
-    public Track[] tracks { get; set; }
+    public List<SpotifyTrack> items { get; set; }
+    public SpotifyTrack[] tracks { get; set; }
 }
 
 public class External_urls

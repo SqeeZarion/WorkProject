@@ -1,0 +1,113 @@
+﻿syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/http.proto";
+
+package spotify;
+option csharp_namespace = "Spotify.Recommendations";
+
+service SpotifyRecommendationsService {
+  rpc GetTopArtistsWithAlbums(GetUserRecommendationsRequest) returns (RecommendationsResponse) {
+    option (google.api.http) = {
+      get: "/v1/recommendations/artists-albums"
+    };
+  }
+  rpc GetSavedAlbumsOnly(GetUserRecommendationsRequest) returns (RecommendationsResponse) {
+    option (google.api.http) = {
+      get: "/v1/recommendations/saved-albums"
+    };
+  }
+
+  rpc GetTrackRecommendations(GetUserRecommendationsRequest) returns (RecommendationsResponse) {
+    option (google.api.http) = {
+      get: "/v1/recommendations/tracks"
+    };
+  }
+  
+  rpc GetSavedPlaylistsOnly (GetUserRecommendationsRequest) returns (RecommendationsResponse){
+    option (google.api.http) = {
+      get: "/v1/recommendations/saved-playlists"
+    };
+  }
+}
+
+  message GetUserRecommendationsRequest {
+    // Empty request as we'll use the authenticated user's context
+  }
+
+// Використовуємо той самий формат, що й в Album.proto
+message Image {
+  int32 height = 1;
+  string url = 2;
+  int32 width = 3;
+}
+
+message Artist {
+  string id = 1;
+  string name = 2;
+  repeated string genres = 3;
+  int32 popularity = 4;
+  string image_url = 5;        // URL головного зображення для фронту
+  string spotify_url = 6;      // Посилання на Spotify профіль
+  repeated Image images = 7;   // Всі зображення артиста
+}
+
+message Track {
+  string id = 1;
+  string name = 2;
+  repeated string artists = 3;  // Імена артистів
+  string album_id = 4;
+  string album_name = 5;       // Назва альбому для фронту
+  string release_date = 6;
+  int32 popularity = 7;
+  int32 duration_ms = 8;       // Тривалість треку
+  string preview_url = 9;      // URL для прев'ю треку
+  string spotify_url = 10;     // Посилання на трек в Spotify
+  string image_url = 11;       // URL обкладинки альбому
+  repeated Image images = 12;  // Всі зображення альбому
+}
+
+message Album {
+  string id = 1;
+  string name = 2;
+  repeated string artists = 3;  // Імена артистів
+  string release_date = 4;
+  int32 popularity = 5;
+  int32 total_tracks = 6;      // Кількість треків в альбомі
+  string album_type = 7;       // Тип альбому (album, single, compilation)
+  string spotify_url = 8;      // Посилання на альбом в Spotify
+  string image_url = 9;        // URL головного зображення
+  repeated Image images = 10;  // Всі зображення альбому
+}
+
+message Playlist {
+  string id = 1;
+  string spotify_id = 2;
+  string name = 3;
+  string description = 4;
+  string owner_name = 5;
+  bool is_public = 6;
+  string image_url = 7;
+  string spotify_url = 8;
+  int32 total_tracks = 9;
+  string created_at = 10;
+}
+
+message RecentlyPlayed {
+  string track_id = 1;
+  string track_name = 2;       // Назва треку для фронту
+  string played_at = 3;        // Дата відтворення
+  string artist_name = 4;      // Ім'я артиста для фронту
+  string album_name = 5;       // Назва альбому для фронту
+  string image_url = 6;        // URL обкладинки для фронту
+}
+
+message RecommendationsResponse {
+  repeated Artist top_artists = 1;
+  repeated Track top_tracks = 2;
+  repeated Track saved_tracks = 3;
+  repeated Album saved_albums = 4;
+  repeated RecentlyPlayed recently_played = 5;
+  repeated Playlist saved_playlist = 6;
+}

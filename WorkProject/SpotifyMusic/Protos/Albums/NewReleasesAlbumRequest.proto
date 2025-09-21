@@ -1,0 +1,53 @@
+﻿syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/http.proto";
+
+package spotify;
+option csharp_namespace = "Spotify.Newrelease";
+
+
+service NewReleasesService {
+  // Отримання нових випусків за країною та лімітом Кожен rpc визначення в .proto файлі означає одну операцію, яку можна викликати через мережу.
+  rpc GetNewReleases (GetNewReleasesRequest) returns (AlbumsResponse) {
+    option (google.api.http) = {
+      get: "/v1/browse/new-releases"
+      additional_bindings {
+        get: "/v1/browse/new-releases?limit={limit}&offset={offset}"
+      }
+    };
+  }
+}
+
+// Запит для отримання нових випусків
+message GetNewReleasesRequest {
+  string country_code = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  
+}
+
+message Image {
+  int32 height = 1;
+  string url = 2;
+  int32 width = 3;
+}
+// Модель альбому
+message Album {
+  string id = 1;
+  string name = 2;
+  repeated string artists = 3;  // Імена артистів
+  string release_date = 4;
+  int32 popularity = 5;
+  int32 total_tracks = 6;      // Кількість треків в альбомі
+  string album_type = 7;       // Тип альбому (album, single, compilation)
+  string spotify_url = 8;      // Посилання на альбом в Spotify
+  string image_url = 9;        // URL головного зображення
+  repeated Image images = 10;  // Всі зображення альбому
+}
+
+// Відповідь, яка містить список альбомів
+message AlbumsResponse {
+  repeated Album albums = 1;
+}

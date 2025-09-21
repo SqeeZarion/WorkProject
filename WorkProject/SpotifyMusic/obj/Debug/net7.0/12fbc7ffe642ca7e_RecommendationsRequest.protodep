@@ -1,0 +1,6 @@
+obj\Debug\net7.0\Protos/RecommendationsRequest.cs \
+obj\Debug\net7.0\Protos/RecommendationsRequestGrpc.cs: google/api/http.proto\
+ C:/Users/User/.nuget/packages/grpc.tools/2.62.0/build/native/include/google/protobuf/descriptor.proto\
+ google/api/annotations.proto\
+ C:/Users/User/.nuget/packages/grpc.tools/2.62.0/build/native/include/google/protobuf/timestamp.proto\
+ Protos/RecommendationsRequest.proto

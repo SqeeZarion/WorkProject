@@ -61,11 +61,15 @@ E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Gr
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.Client.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.ClientFactory.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.Common.dll
+E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Humanizer.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.OpenApi.dll
+E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Mono.TextTemplating.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\MySqlConnector.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Newtonsoft.Json.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Pomelo.EntityFrameworkCore.MySql.dll
@@ -73,6 +77,7 @@ E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Sp
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\System.CodeDom.dll
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.csproj.AssemblyReference.cache
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.GeneratedMSBuildEditorConfig.editorconfig
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.AssemblyInfoInputs.cache
@@ -94,8 +99,62 @@ E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\re
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.pdb
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.genruntimeconfig.cache
 E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\ref\SpotifyMusic.dll
-E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Humanizer.dll
-E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
-E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
-E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Mono.TextTemplating.dll
-E:\projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\System.CodeDom.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\appsettings.Development.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\appsettings.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyMusic.staticwebassets.endpoints.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyMusic.exe
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyMusic.deps.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyMusic.runtimeconfig.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyMusic.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyMusic.pdb
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Google.Api.CommonProtos.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Google.Protobuf.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.AspNetCore.Server.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.AspNetCore.Server.ClientFactory.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Core.Api.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.Client.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.ClientFactory.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Grpc.Net.Common.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Humanizer.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Microsoft.OpenApi.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Mono.TextTemplating.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\MySqlConnector.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Newtonsoft.Json.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Pomelo.EntityFrameworkCore.MySql.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\SpotifyApi.NetCore.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\System.CodeDom.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.csproj.AssemblyReference.cache
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.GeneratedMSBuildEditorConfig.editorconfig
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.AssemblyInfoInputs.cache
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.AssemblyInfo.cs
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.csproj.CoreCompileInputs.cache
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.MvcApplicationPartsAssemblyInfo.cs
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.MvcApplicationPartsAssemblyInfo.cache
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.sourcelink.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\scopedcss\bundle\SpotifyMusic.styles.css
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets.build.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets.development.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets.build.endpoints.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets\msbuild.SpotifyMusic.Microsoft.AspNetCore.StaticWebAssets.props
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets\msbuild.SpotifyMusic.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets\msbuild.build.SpotifyMusic.props
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.SpotifyMusic.props
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.SpotifyMusic.props
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\staticwebassets.pack.json
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyM.675DF942.Up2Date
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\refint\SpotifyMusic.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.pdb
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\SpotifyMusic.genruntimeconfig.cache
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\obj\Debug\net7.0\ref\SpotifyMusic.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\DotNetEnv.dll
+E:\projects\work Projects\workProject\WorkProject\WorkProject\SpotifyMusic\bin\Debug\net7.0\Sprache.dll
