@@ -2,5 +2,5 @@
 
 public interface ITokenService
 {
-    Task<string> GetAccessTokenAsync(int userId);
+    Task<string> GetAccessTokenAsync(int userId, CancellationToken cancellationToken = default);
 }

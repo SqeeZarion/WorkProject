@@ -1,8 +1,8 @@
 using System.Data.Common;
+using System.Text;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using SpotifyWebApi.Models;
-// using SpotifyWebApi.Repositories;
 using WorkProject.Auth.Handler;
 using WorkProject.Auth.Interface;
 using WorkProject.Auth.Service;
@@ -15,38 +15,42 @@ using WorkProject.GrpcService.Recommendations;
 using DbConnection = SpotifyWebApi.Database.DbConnection;
 using Microsoft.Extensions.Logging;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using WorkProject.Helpers;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// --- завантажуємо ENV для локалки визначаємо середовище ---
+// --- завантажуємо ENV для локальної розробки ---
+// У контейнері ENV вже передаються через docker-compose/k8s,
+// а локально беремо значення з файлу Configuration.local.env
 var runningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-
 if (!runningInContainer)
     Env.Load(Path.Combine(builder.Environment.ContentRootPath, "Configuration.local.env"));
 
 builder.Configuration.AddEnvironmentVariables();
 
-// Add services to the container.
-
+// --- додаємо базові сервіси ---
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// --- CORS ---
+// дозволяємо будь-які запити (для фронту/дебагу)
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         builder =>
         {
             builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();                                                      
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
         });
 });
 
+// --- БД ---
+// рядок з ENV або appsettings.json
 var cs = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULTCONNECTION")
          ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -54,50 +58,43 @@ if (string.IsNullOrWhiteSpace(cs))
     throw new InvalidOperationException("Missing ConnectionStrings:DefaultConnection (ENV або appsettings).");
 
 builder.Services.AddDbContext<DbConnection>(options =>
-    options.UseMySql(cs, new MySqlServerVersion(new Version(8,0,36)), o => o.EnableRetryOnFailure()));
+    options.UseMySql(cs, new MySqlServerVersion(new Version(8, 0, 36)), o => o.EnableRetryOnFailure()));
 
+// --- gRPC + HttpClient ---
 builder.Services.AddGrpc();
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<AuthService>();
-builder.Services.AddSingleton<ITokenService, TokenService>();
-builder.Services.AddScoped<JwtService>();
 
-//HttpClient використовується для відправки запитів до якогось сервісу
+// --- сервіси авторизації ---
+builder.Services.AddSingleton<AuthService>();           // логіка авторизації Spotify
+builder.Services.AddSingleton<ITokenService, TokenService>(); // оновлення/отримання Spotify токенів
+builder.Services.AddScoped<JwtService>();               // генерація JWT токенів для клієнта
+builder.Services.AddTransient<AuthorizationHandler>();  // додає Spotify access_token у HttpClient
+
+// --- HttpClient-и для роботи з Spotify API ---
 builder.Services.AddHttpClient<NewReleasesGrpcService>(client =>
 {
-    //базова адресу для всіх запитів
+    // 📌 Базова адреса для всіх запитів до Spotify API
     client.BaseAddress = new Uri("https://api.spotify.com/v1/");
     
-    // Він отримує access token з ITokenService.
-    // Додає його в заголовок Authorization: Bearer <access_token>.
-    // Потім передає запит далі по ланцюжку.
-}).AddHttpMessageHandler(provider => 
-    new AuthorizationHandler(provider.GetRequiredService<ITokenService>()));
+    // ⚙️ Додаткові пояснення:
+    // - Цей HttpClient використовується, коли ToDoAlbumGrpcService робить запити до Spotify.
+    // - Перед кожним запитом спрацьовує AuthorizationHandler.
+    // - AuthorizationHandler дістає access_token з ITokenService.
+    // - Потім додає заголовок Authorization: Bearer <access_token>.
+    // - У результаті кожен запит цього HttpClient йде до Spotify від імені конкретного користувача.
+}).AddHttpMessageHandler<AuthorizationHandler>();
 
 builder.Services.AddHttpClient<ToDoAlbumGrpcService>(client =>
 {
-    //базова адресу для всіх запитів
     client.BaseAddress = new Uri("https://api.spotify.com/v1/");
-    
-    // Він отримує access token з ITokenService.
-    // Додає його в заголовок Authorization: Bearer <access_token>.
-    // Потім передає запит далі по ланцюжку.
-}).AddHttpMessageHandler(provider => 
-    new AuthorizationHandler(provider.GetRequiredService<ITokenService>()));
+}).AddHttpMessageHandler<AuthorizationHandler>();
 
 builder.Services.AddHttpClient<RecommendationsGrpcService>(client =>
 {
-    //базова адресу для всіх запитів
     client.BaseAddress = new Uri("https://api.spotify.com/v1/");
-    
-    // Він отримує access token з ITokenService.
-    // Додає його в заголовок Authorization: Bearer <access_token>.
-    // Потім передає запит далі по ланцюжку.
-}).AddHttpMessageHandler(provider => 
-    new AuthorizationHandler(provider.GetRequiredService<ITokenService>()));
+}).AddHttpMessageHandler<AuthorizationHandler>();
 
-builder.Services.AddTransient<AuthorizationHandler>();  
-
+// --- gRPC клієнти ---
 builder.Services.AddSingleton<NewReleasesGrpcClient>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
@@ -112,21 +109,19 @@ builder.Services.AddSingleton<ToDoAlbumGrpcClient>(provider =>
     return new ToDoAlbumGrpcClient(grpcServiceUrl!);
 });
 
-// Реєструємо gRPC клієнт
+// RecommendationsGrpcClient реєструємо через AddGrpcClient
 builder.Services.AddGrpcClient<RecommendationsGrpcClient>(options =>
 {
     options.Address = new Uri(builder.Configuration["GrpcSettings:RecommendationsServiceUrl"]!);
 });
 
+// --- Налаштування Kestrel (порти для Swagger/gRPC) ---
 builder.WebHost.ConfigureKestrel(options =>
 {
     if (runningInContainer)
     {
-        // Порт для HTTP/2 (gRPC)
-        options.ListenAnyIP(5101, o => o.Protocols = HttpProtocols.Http2);
-
-        // Порт для HTTP/1.1 (Swagger)
-        options.ListenAnyIP(5100, o => o.Protocols = HttpProtocols.Http1);
+        options.ListenAnyIP(5101, o => o.Protocols = HttpProtocols.Http2); // gRPC
+        options.ListenAnyIP(5100, o => o.Protocols = HttpProtocols.Http1); // Swagger
     }
     else
     {
@@ -135,41 +130,64 @@ builder.WebHost.ConfigureKestrel(options =>
     }
 });
 
-//Вмикає HTTP/2 без TLS (h2c) для клієнтського HttpClient/gRPC-клієнтів у цьому процесі.
-//За замовчуванням .NET забороняє робити HTTP/2 по http:// (без HTTPS) — з міркувань безпеки.
-//Цей свіч дозволяє.цей свіч впливає на клієнта, а не на Kestrel. Для самого сервера факт наявності свічa нічого не змінює.
-
+// Вмикає HTTP/2 без TLS (h2c) для клієнтів HttpClient/gRPC-клієнтів
+// Інакше .NET за замовчуванням блокує HTTP/2 без HTTPS
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
+// --- JWT Authentication ---
+// використовується для перевірки JWT токенів у вхідних запитах
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
 var app = builder.Build();
 
-// редірект у контейнері вимикаємо (бо TLS не налаштований)
+// --- Middleware pipeline ---
 if (!runningInContainer) app.UseHttpsRedirection();
 
-// Автоматичне оновлення БД
+app.UseCors();           // політика CORS
+app.UseAuthentication(); // перевірка JWT токенів
+app.UseAuthorization();  // авторизація на основі claims/ролей
+
+// --- Автоматичне оновлення БД (міграції) ---
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider
         .GetRequiredService<ILoggerFactory>()
-        .CreateLogger("MigrationStartup");  
-    
+        .CreateLogger("MigrationStartup");
+
     MigrationChecker.CheckAndApplyMigrations<DbConnection>(scope.ServiceProvider, logger);
 }
 
-app.MapGrpcService<NewReleasesGrpcService>();
-app.MapGrpcService<ToDoAlbumGrpcService>();
-app.MapGrpcService<RecommendationsGrpcService>();
-
-// Configure the HTTP request pipeline.
+// Swagger тільки у dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+// gRPC сервіси
+app.MapGrpcService<NewReleasesGrpcService>();
+app.MapGrpcService<ToDoAlbumGrpcService>();
+app.MapGrpcService<RecommendationsGrpcService>();
 
+// контролери (REST API)
 app.MapControllers();
 
 app.Run();

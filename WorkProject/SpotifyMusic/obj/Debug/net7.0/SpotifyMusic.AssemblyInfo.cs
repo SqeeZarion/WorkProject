@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpotifyMusic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+851c71b24432e34f3e4744dd30622b1ceecfa915")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f1982afd39c5828da76443adfb3084134169f305")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpotifyMusic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpotifyMusic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
