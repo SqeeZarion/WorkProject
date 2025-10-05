@@ -17,7 +17,7 @@ public class ToDoAlbumGrpcService : ToDoAlbumService.ToDoAlbumServiceBase
         _httpClient = httpClient ?? throw new AggregateException();
     }
 
-    // Приватний метод для трансформації даних
+    // Приватний метод для трансформації даних (Spotify API -> gRPC формат)
     private AlbumsResponse MapSpotifyAlbumsToResponse(SpotifyAlbumsResponse spotifyResponse)
     {
         try
@@ -57,16 +57,13 @@ public class ToDoAlbumGrpcService : ToDoAlbumService.ToDoAlbumServiceBase
         }
     }
 
-    // 👉 Коли і де використовувати:
-    // На сторінці перегляду одного конкретного альбому.
-    // Користувач натискає на альбом зі списку (наприклад, улюблених чи рекомендованих).
-    // Це одиничний запит — по одному ID.
+    // Отримати альбом за ID
 
     public override async Task<AlbumsResponse> GetAlbum(GetAlbumRequest request, ServerCallContext context)
     {
         string spotifyUrl = $"v1/albums?id={request.AlbumId}";
 
-        var response = await _httpClient.GetAsync(spotifyUrl);
+        var response = await _httpClient.GetAsync(spotifyUrl, context.CancellationToken);
         if (!response.IsSuccessStatusCode)
             throw new Exception("Failed to fetch data from Spotify API.");
 
@@ -76,17 +73,15 @@ public class ToDoAlbumGrpcService : ToDoAlbumService.ToDoAlbumServiceBase
         return MapSpotifyAlbumsToResponse(spotifyAlbumsResponse);
     }
 
-    // 👉 Коли і де використовувати:
-    // На сторінці «Моя музика» або «Улюблені альбоми».
-    // Користувач хоче подивитися весь свій список збережених/вподобаних альбомів.
-    // Це масовий запит: запитуємо одразу кілька album_id, які вже є в базі
+    
+    // Улюблені альбоми користувача
 
     public override async Task<AlbumsResponse> GetFavoriteAlbums(GetFavoriteAlbumsRequest request,
         ServerCallContext context)
     {
         string spotifyUrl = "v1/me/albums";
 
-        var response = await _httpClient.GetAsync(spotifyUrl);
+        var response = await _httpClient.GetAsync(spotifyUrl, context.CancellationToken);
         if (!response.IsSuccessStatusCode)
             throw new Exception("Failed to fetch favorite albums from Spotify API.");
 
@@ -96,16 +91,14 @@ public class ToDoAlbumGrpcService : ToDoAlbumService.ToDoAlbumServiceBase
         return MapSpotifyAlbumsToResponse(spotifyAlbumsResponse);
     }
 
-    // Отримати всі альбоми певного виконавця
-    // Що робить / для чого:
-    // Повертає повну дискографію виконавця — зручно при перегляді його сторінки
+    // Альбоми конкретного виконавця
 
     public override async Task<AlbumsResponse> GetArtistAlbums(GetArtistAlbumsRequest request,
         ServerCallContext context)
     {
         string spotifyUrl = $"v1/artists/{request.ArtistId}/albums?include_groups=album";
 
-        var response = await _httpClient.GetAsync(spotifyUrl);
+        var response = await _httpClient.GetAsync(spotifyUrl, context.CancellationToken);
         if (!response.IsSuccessStatusCode)
             throw new Exception("Failed to fetch artist albums from Spotify API.");
 
@@ -115,15 +108,13 @@ public class ToDoAlbumGrpcService : ToDoAlbumService.ToDoAlbumServiceBase
         return MapSpotifyAlbumsToResponse(spotifyAlbumsResponse);
     }
 
-    // Пошук альбомів за назвою
-    // Що робить / для чого:
-    // Дозволяє шукати альбоми по ключовому слову або фрагменту назви — зручно на головній сторінці або в пошуку.
+    // Пошук альбомів
 
     public override async Task<AlbumsResponse> SearchAlbums(SearchAlbumsRequest request, ServerCallContext context)
     {
         string spotifyUrl = $"v1/search?q={Uri.EscapeDataString(request.Query)}&type=album";
 
-        var response = await _httpClient.GetAsync(spotifyUrl);
+        var response = await _httpClient.GetAsync(spotifyUrl, context.CancellationToken);
         if (!response.IsSuccessStatusCode)
             throw new Exception("Failed to fetch albums from Spotify API.");
 

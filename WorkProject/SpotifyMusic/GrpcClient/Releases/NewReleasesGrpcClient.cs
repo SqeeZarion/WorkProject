@@ -3,9 +3,8 @@ using Spotify.Newrelease;
 using SpotifyReleasesService = Spotify.Newrelease.NewReleasesService;
 namespace WorkProject.GrpcClient.Albums;
 
-// (репозиторій приймає запити ззовні й зєднює з сервісом)
-// Клієнт здійснює віддалені виклики до сервера, передаючи потрібні дані і отримуючи відповіді,
-// які потім можуть використовуватись у клієнтській програмі.
+// Клієнт gRPC — здійснює віддалені виклики до Spotify gRPC сервісу
+
 public class NewReleasesGrpcClient
 {
     private readonly SpotifyReleasesService.NewReleasesServiceClient _client;
@@ -17,7 +16,7 @@ public class NewReleasesGrpcClient
         _client = new SpotifyReleasesService.NewReleasesServiceClient(channel);
     }
 
-    public async Task<AlbumsResponse> GetNewReleasesAsync(string countryCode, int limit, int offset)
+    public async Task<AlbumsResponse> GetNewReleasesAsync(string countryCode, int limit, int offset, CancellationToken cancellationToken)
     {
         var request = new GetNewReleasesRequest
         {
@@ -26,6 +25,6 @@ public class NewReleasesGrpcClient
             Offset = offset
         };
 
-        return await _client.GetNewReleasesAsync(request);
+        return await _client.GetNewReleasesAsync(request, cancellationToken: cancellationToken);
     }
 }

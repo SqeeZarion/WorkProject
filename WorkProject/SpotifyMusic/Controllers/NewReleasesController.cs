@@ -15,9 +15,9 @@ public class NewReleasesController : ControllerBase
     }
     
     [HttpGet("{countryCode}/{limit}/{offset}")]
-    public async Task<IActionResult> GetNewReleases(string countryCode, int limit, int offset)
+    public async Task<IActionResult> GetNewReleases(string countryCode, int limit, int offset, CancellationToken cancellationToken)
     {
-        var releases = await _grpcClient.GetNewReleasesAsync(countryCode, limit, offset);
+        var releases = await _grpcClient.GetNewReleasesAsync(countryCode, limit, offset, cancellationToken);
         return Ok(releases.Albums);
     }
 }

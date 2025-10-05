@@ -42,7 +42,7 @@ public class AuthService
 
     //3. Обмін коду на Access і Refresh Tokens
 
-    public async Task<string> GetAccessTokenUsingCodeAsync(string code)
+    public async Task<string> GetAccessTokenUsingCodeAsync(string code,CancellationToken cancellationToken = default)
     {
         var clientId = _configuration["Spotify:ClientId"];
         var clientSecret = _configuration["Spotify:ClientSecret"];
@@ -60,7 +60,7 @@ public class AuthService
             })
         };
 
-        var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -72,22 +72,22 @@ public class AuthService
         if (tokenData == null || string.IsNullOrEmpty(tokenData.AccessToken))
             throw new Exception("Failed to retrieve access token from Spotify");
         
-        var userProfile = await GetSpotifyUserProfileAsync(tokenData!.AccessToken);
+        var userProfile = await GetSpotifyUserProfileAsync(tokenData!.AccessToken, cancellationToken);
 
-        await _userService.UpsertFromSpotifyAsync(userProfile, tokenData.RefreshToken, tokenData.ExpiresIn);
+        await _userService.UpsertFromSpotifyAsync(userProfile, tokenData.RefreshToken, tokenData.ExpiresIn, cancellationToken);
         return tokenData.AccessToken;
     }
 
-    public async Task<SpotifyUserResponse?> GetSpotifyUserProfileAsync(string accessToken)
+    public async Task<SpotifyUserResponse?> GetSpotifyUserProfileAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         
-        var response = await _httpClient.GetAsync("https://api.spotify.com/v1/me");
+        var response = await _httpClient.GetAsync("https://api.spotify.com/v1/me", cancellationToken);
         
         if (!response.IsSuccessStatusCode)
             throw new Exception($"Spotify API error: {response.StatusCode}");
 
-        var json = await response.Content.ReadAsStringAsync();
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
 
         var user = JsonSerializer.Deserialize<SpotifyUserResponse>(json);
 

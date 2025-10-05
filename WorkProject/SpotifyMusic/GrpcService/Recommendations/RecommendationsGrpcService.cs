@@ -18,22 +18,24 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
+    
+    // Приватний метод для трансформації даних (Spotify API -> gRPC формат)
 
     public override async Task<RecommendationsResponse> GetTopArtistsWithAlbums(GetUserRecommendationsRequest request,
         ServerCallContext context)
     {
-        var response = new RecommendationsResponse();
+        var response = new RecommendationsResponse();   
 
         try
         {
             // Отримуємо топ артистів
-            var topArtists = await FetchGetTopArtists();
+            var topArtists = await FetchGetTopArtists(context.CancellationToken);
             if (topArtists?.items?.Any() == true)
             {
                 // Отримуємо альбоми артиста
                 foreach (var artist in topArtists.items)
                 {
-                    var artistAlbums = await FetchGetArtistAlbums(artist.Id);
+                    var artistAlbums = await FetchGetArtistAlbums(artist.Id, context.CancellationToken);
                     if (artistAlbums?.Albums?.Items?.Any() == true)
                     {
                         response.SavedAlbums.AddRange(artistAlbums.Albums.Items.Select(a => new Album
@@ -88,7 +90,7 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
         try
         {
             // Отримуємо збережені альбоми 
-            var savedAlbums = await FetchGetSavedAlbums();
+            var savedAlbums = await FetchGetSavedAlbums(context.CancellationToken);
             if (savedAlbums?.Albums?.Items?.Any() == true)
             {
                 response.SavedAlbums.AddRange(savedAlbums.Albums.Items.Select(a => new Album
@@ -132,7 +134,7 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
         try
         {
             // Отримуємо топ треків
-            var topTracks = await FetchGetTopTracks();
+            var topTracks = await FetchGetTopTracks(context.CancellationToken);
             if (topTracks?.items?.Any() == true)
             {
                 response.TopTracks.AddRange(topTracks.items.Select(t => new Track
@@ -147,7 +149,7 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
             }
 
             // Отримуємо збережені треки
-            var savedTracks = await FetchGetSavedTracks();
+            var savedTracks = await FetchGetSavedTracks(context.CancellationToken);
             if (savedTracks?.items?.Any() == true)
             {
                 response.SavedTracks.AddRange(savedTracks.items.Select(t => new Track
@@ -161,7 +163,7 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
                 }));
             }
 
-            var recentlyPlayed = await FetchGetRecentlyPlayed();
+            var recentlyPlayed = await FetchGetRecentlyPlayed(context.CancellationToken);
             // Отримуємо нещодавно відтворені треки
             response.RecentlyPlayed.AddRange(recentlyPlayed.items.Select(rp => new RecentlyPlayed
             {
@@ -188,7 +190,7 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
         var response = new RecommendationsResponse();
         try
         {
-            var playlists = await FetchGetPlaylist();
+            var playlists = await FetchGetPlaylist(context.CancellationToken);
             if (playlists?.items.Any() == true)
             {
                 response.SavedPlaylist.AddRange(playlists.items.Select(p => new Playlist
@@ -215,73 +217,73 @@ public class RecommendationsGrpcService : SpotifyRecommendationsService.SpotifyR
         return response;
     }
 
-    private async Task<SpotifyArtistsResponse?> FetchGetTopArtists()
+    private async Task<SpotifyArtistsResponse?> FetchGetTopArtists(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync($"me/top/artists?limit={Limit}");
         if (!response.IsSuccessStatusCode)
             throw new Exception("Spotify API returned error when fetching Get Top Artists");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyArtistsResponse>(content);
     }
 
-    private async Task<SpotifyTracksResponse?> FetchGetTopTracks()
+    private async Task<SpotifyTracksResponse?> FetchGetTopTracks(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync($"me/top/tracks?limit={Limit}");
         if (!response.IsSuccessStatusCode)
             throw new Exception("Spotify API returned error when fetching Get Top Tracks");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyTracksResponse>(content);
     }
 
-    private async Task<SpotifySavedTracksResponse?> FetchGetSavedTracks()
+    private async Task<SpotifySavedTracksResponse?> FetchGetSavedTracks(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync($"me/tracks?limit={Limit}");
         if (!response.IsSuccessStatusCode)
             throw new Exception("Spotify API returned error when fetching Get Saved Tracks");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifySavedTracksResponse>(content);
     }
 
-    private async Task<SpotifyAlbumsResponse?> FetchGetSavedAlbums()
+    private async Task<SpotifyAlbumsResponse?> FetchGetSavedAlbums(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync($"me/albums?limit={Limit}");
         if (!response.IsSuccessStatusCode)
             throw new Exception("Spotify API returned error when fetching Get Saved Albums");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyAlbumsResponse>(content);
     }
 
-    private async Task<SpotifyRecentlyPlayedResponse?> FetchGetRecentlyPlayed()
+    private async Task<SpotifyRecentlyPlayedResponse?> FetchGetRecentlyPlayed(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync($"me/player/recently-played?limit={Limit}");
         if (!response.IsSuccessStatusCode)
             throw new Exception("Spotify API returned error when fetching Recently Played");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyRecentlyPlayedResponse>(content);
     }
 
-    private async Task<SpotifyAlbumsResponse?> FetchGetArtistAlbums(string artistId)
+    private async Task<SpotifyAlbumsResponse?> FetchGetArtistAlbums(string artistId, CancellationToken cancellationToken)
     {
         var response =
             await _httpClient.GetAsync($"/artists/{artistId}/albums?limit={Limit}&include_groups=album,single");
         if (!response.IsSuccessStatusCode) throw new Exception("Spotify API returned error when fetching playlists");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyAlbumsResponse>(content);
     }
 
-    private async Task<SpotifyPlaylistsResponse?> FetchGetPlaylist()
+    private async Task<SpotifyPlaylistsResponse?> FetchGetPlaylist(CancellationToken cancellationToken)
     {
         var response =
             await _httpClient.GetAsync("me/playlists?limit=20");
         if (!response.IsSuccessStatusCode) throw new Exception("Spotify API returned error when Get Playlist");
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyPlaylistsResponse>(content);
     }
 }

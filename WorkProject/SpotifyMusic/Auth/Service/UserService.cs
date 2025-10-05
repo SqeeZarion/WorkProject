@@ -22,9 +22,9 @@ public class UserService : IUserService
 
     public async Task<UserEnity> UpsertFromSpotifyAsync(SpotifyUserResponse userResponse, string? refreshToken,
         int expiresIn,
-        CancellationToken ct = default)
+        CancellationToken cancellationToken = default)
     {
-        var user = await _db.Users.SingleOrDefaultAsync(u => u.SpotifyUserId == userResponse.Id, ct);
+        var user = await _db.Users.SingleOrDefaultAsync(u => u.SpotifyUserId == userResponse.Id, cancellationToken);
 
         var expiresAt = DateTime.UtcNow.AddSeconds(Math.Max(0, expiresIn - 30));
 
@@ -54,7 +54,7 @@ public class UserService : IUserService
             _logger.LogInformation("Update user SpotifyId={Id}", userResponse.Id);
         }
 
-        await _db.SaveChangesAsync(ct);
+        await _db.SaveChangesAsync(cancellationToken);
         return user;
     }
 }
