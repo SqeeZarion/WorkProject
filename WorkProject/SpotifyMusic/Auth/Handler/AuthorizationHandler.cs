@@ -23,7 +23,7 @@ public class AuthorizationHandler : DelegatingHandler
 
         var userId = int.Parse(userIdClaim);
         
-        var accessToken = await _tokenService.GetAccessTokenAsync(userId);
+        var accessToken = await _tokenService.GetAccessTokenAsync(userId, cancellationToken);
       
         //об'єкт заголовка авторизації з вказаним типом і значенням.
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

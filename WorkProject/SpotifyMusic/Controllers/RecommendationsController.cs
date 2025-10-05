@@ -15,56 +15,74 @@ public class RecommendationsController : ControllerBase
     }
     
     [HttpGet("top-artists-with-albums")]
-    public async Task<IActionResult> GetTopArtistsWithAlbums()
+    public async Task<IActionResult> GetTopArtistsWithAlbums(CancellationToken cancellationToken)
     {
         try
         {
-            var recommendations = await _grpcClient.GetTopArtistsWithAlbumsAsync();
+            var recommendations = await _grpcClient.GetTopArtistsWithAlbumsAsync(cancellationToken);
             
             if (recommendations == null)
-                return NotFound("Рекомендації по альбомах не знайдено");
+                return NotFound("Recommendations for albums not found");
             
             return Ok(recommendations);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Помилка при отриманні рекомендацій по альбомах: {ex.Message}");
+            return StatusCode(500, $"Error receiving album recommendations: {ex.Message}");
         }
     }
     
     [HttpGet("saved-albums")]
-    public async Task<IActionResult> GetSavedAlbums()
+    public async Task<IActionResult> GetSavedAlbums(CancellationToken cancellationToken)
     {
         try
         {
-            var recommendations = await _grpcClient.GetSavedAlbumsOnlyAsync();
+            var recommendations = await _grpcClient.GetSavedAlbumsOnlyAsync(cancellationToken);
             if (recommendations == null)
-                return NotFound("Збережені альбоми не знайдено");
+                return NotFound("No saved albums found");
 
             return Ok(recommendations);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Помилка при отриманні збережених альбомів: {ex.Message}");
+            return StatusCode(500, $"Error when receiving saved albums: {ex.Message}");
         }
     }
 
     [HttpGet("tracks")]
-    public async Task<IActionResult> GetTrackRecommendations()
+    public async Task<IActionResult> GetTrackRecommendations(CancellationToken cancellationToken)
     {
         try
         {
-            var recommendations = await _grpcClient.GetTrackRecommendationsAsync();
+            var recommendations = await _grpcClient.GetTrackRecommendationsAsync(cancellationToken);
             
             if (recommendations == null)
-                return NotFound("Рекомендації по треках не знайдено");
+                return NotFound("No recommendations found for tracks");
             
             
             return Ok(recommendations);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Помилка при отриманні рекомендацій по треках: {ex.Message}");
+            return StatusCode(500, $"Error receiving track recommendations: {ex.Message}");
+        }
+    }
+
+    [HttpGet("saved-playlists")]
+    public async Task<IActionResult> GetSavedPlaylist(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var recommendations = await _grpcClient.GetSavedPlaylistsOnlyAsync(cancellationToken);
+
+            if (recommendations == null)
+                return NotFound("No saved playlists found");
+
+            return Ok(recommendations);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error receiving saved playlists: {ex.Message}");
         }
     }
 }

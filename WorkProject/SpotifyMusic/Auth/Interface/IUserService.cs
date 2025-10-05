@@ -7,5 +7,5 @@ public interface IUserService
 {
     Task<UserEnity> UpsertFromSpotifyAsync(
         SpotifyUserResponse me, string? refreshToken, int expiresIn,
-        CancellationToken ct = default);
+        CancellationToken cancellationToken = default);
 }

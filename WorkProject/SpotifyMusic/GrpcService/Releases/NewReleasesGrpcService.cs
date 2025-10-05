@@ -28,7 +28,7 @@ public class NewReleasesGrpcService : NewReleasesService.NewReleasesServiceBase
 
         try
         {
-            var spotifyAlbumsResponse = await FetchNewReleases(request);
+            var spotifyAlbumsResponse = await FetchNewReleases(request, context.CancellationToken);
 
             if (spotifyAlbumsResponse?.Albums?.Items?.Any() == true)
             {
@@ -64,16 +64,16 @@ public class NewReleasesGrpcService : NewReleasesService.NewReleasesServiceBase
         return response;
     }
 
-    private async Task<SpotifyAlbumsResponse?> FetchNewReleases(GetNewReleasesRequest request)
+    private async Task<SpotifyAlbumsResponse?> FetchNewReleases(GetNewReleasesRequest request, CancellationToken cancellationToken)
     {
         var spotifyApiUrl =
             $"browse/new-releases?country={request.CountryCode}&limit={request.Limit}&offset={request.Offset}";
-        var spotifyResponse = await _httpClient.GetAsync(spotifyApiUrl);
+        var spotifyResponse = await _httpClient.GetAsync(spotifyApiUrl, cancellationToken);
 
         if (!spotifyResponse.IsSuccessStatusCode)
             throw new Exception("Spotify API returned error when fetching new releases");
 
-        var jsonResponse = await spotifyResponse.Content.ReadAsStringAsync();
+        var jsonResponse = await spotifyResponse.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<SpotifyAlbumsResponse>(jsonResponse);
     }
 }

@@ -15,33 +15,33 @@ namespace WorkProject.GrpcClient.Recommendations
         /// <summary>
         /// Отримати топ артистів з альбомами.
         /// </summary>
-        public async Task<RecommendationsResponse> GetTopArtistsWithAlbumsAsync()
+        public async Task<RecommendationsResponse> GetTopArtistsWithAlbumsAsync(CancellationToken cancellationToken)
         {
-            return await _client.GetTopArtistsWithAlbumsAsync(new GetUserRecommendationsRequest());
+            return await _client.GetTopArtistsWithAlbumsAsync(new GetUserRecommendationsRequest(), cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Отримати лише збережені альбоми користувача.
         /// </summary>
-        public async Task<RecommendationsResponse> GetSavedAlbumsOnlyAsync()
+        public async Task<RecommendationsResponse> GetSavedAlbumsOnlyAsync(CancellationToken cancellationToken)
         {
-            return await _client.GetSavedAlbumsOnlyAsync(new GetUserRecommendationsRequest());
+            return await _client.GetSavedAlbumsOnlyAsync(new GetUserRecommendationsRequest(), cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Отримати рекомендації по треках (топ та збережені).
         /// </summary>
-        public async Task<RecommendationsResponse> GetTrackRecommendationsAsync()
+        public async Task<RecommendationsResponse> GetTrackRecommendationsAsync(CancellationToken cancellationToken)
         {
-            return await _client.GetTrackRecommendationsAsync(new GetUserRecommendationsRequest());
+            return await _client.GetTrackRecommendationsAsync(new GetUserRecommendationsRequest(), cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Отримати лише збережені плейлісти користувача.
         /// </summary>
-        public async Task<RecommendationsResponse> GetSavedPlaylistsOnlyAsync()
+        public async Task<RecommendationsResponse> GetSavedPlaylistsOnlyAsync(CancellationToken cancellationToken)
         {
-            return await _client.GetSavedPlaylistsOnlyAsync(new GetUserRecommendationsRequest());
+            return await _client.GetSavedPlaylistsOnlyAsync(new GetUserRecommendationsRequest(), cancellationToken: cancellationToken);
         }
     }
 }

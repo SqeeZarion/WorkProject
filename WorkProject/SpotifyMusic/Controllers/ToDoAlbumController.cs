@@ -15,9 +15,9 @@ public class ToDoAlbumController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetAlbumById(string id)
+    public async Task<IActionResult> GetAlbumById(string id, CancellationToken cancellationToken)
     {
-        var album = await _grpcClient.GetAlbumByIdAsync(id);
+        var album = await _grpcClient.GetAlbumByIdAsync(id, cancellationToken);
         return Ok(album.Albums.FirstOrDefault());
     }
     
@@ -29,20 +29,20 @@ public class ToDoAlbumController : ControllerBase
     }
     
     [HttpGet("artist/{artistId}")]
-    public async Task<IActionResult> GetArtistAlbums(string artistId)
+    public async Task<IActionResult> GetArtistAlbums(string artistId, CancellationToken cancellationToken)
     {
-        var albums = await _grpcClient.GetArtistAlbumsAsync(artistId);
+        var albums = await _grpcClient.GetArtistAlbumsAsync(artistId, cancellationToken);
         return Ok(albums.Albums);
     }
     
     [HttpGet("search")]
-    public async Task<IActionResult> SearchAlbums([FromQuery] string q)
+    public async Task<IActionResult> SearchAlbums([FromQuery] string q, CancellationToken cancellationToken)
     {
         // якщо користувач не передав значення або ввів лише пробіли — повертаємо 400.
         if (string.IsNullOrWhiteSpace(q))
             return BadRequest("Search query cannot be empty");
 
-        var albums = await _grpcClient.SearchAlbumsAsync(q);
+        var albums = await _grpcClient.SearchAlbumsAsync(q, cancellationToken);
         return Ok(albums.Albums);
     }
 }

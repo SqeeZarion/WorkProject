@@ -18,14 +18,14 @@ public class ToDoAlbumGrpcClient
         _client = new SpotifyToDoAlbumService.ToDoAlbumServiceClient(channel);
     }
     
-    public async Task<AlbumsResponse> GetAlbumByIdAsync(string albumId)
+    public async Task<AlbumsResponse> GetAlbumByIdAsync(string albumId, CancellationToken cancellationToken)
     {
         var request = new GetAlbumRequest
         {
             AlbumId = albumId
         };
 
-        return await _client.GetAlbumAsync(request);
+        return await _client.GetAlbumAsync(request, cancellationToken:cancellationToken);
     }
     
     public async Task<AlbumsResponse> GetFavoriteAlbumsAsync()
@@ -34,21 +34,21 @@ public class ToDoAlbumGrpcClient
         return await _client.GetFavoriteAlbumsAsync(request);
     }
     
-    public async Task<AlbumsResponse> GetArtistAlbumsAsync(string artistId)
+    public async Task<AlbumsResponse> GetArtistAlbumsAsync(string artistId, CancellationToken cancellationToken)
     {
         var request = new GetArtistAlbumsRequest
         {
             ArtistId = artistId
         };
-        return await _client.GetArtistAlbumsAsync(request);
+        return await _client.GetArtistAlbumsAsync(request, cancellationToken:cancellationToken);
     }
     
-    public async Task<AlbumsResponse> SearchAlbumsAsync(string query)
+    public async Task<AlbumsResponse> SearchAlbumsAsync(string query, CancellationToken cancellationToken)
     {
         var request = new SearchAlbumsRequest
         {
             Query = query
         };
-        return await _client.SearchAlbumsAsync(request);
+        return await _client.SearchAlbumsAsync(request, cancellationToken:cancellationToken);
     }
 }
