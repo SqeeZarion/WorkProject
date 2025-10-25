@@ -6,9 +6,6 @@ using SpotifyWebApi.Models;
 using WorkProject.Auth.Handler;
 using WorkProject.Auth.Interface;
 using WorkProject.Auth.Service;
-using WorkProject.GrpcClient;
-using WorkProject.GrpcClient.Albums;
-using WorkProject.GrpcClient.Recommendations;
 using WorkProject.GrpcService;
 using WorkProject.GrpcService.Albums;
 using WorkProject.GrpcService.Recommendations;
@@ -18,6 +15,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
+using Spotify.Recommendations;
 using WorkProject.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 // --- завантажуємо ENV для локальної розробки ---
 // У контейнері ENV вже передаються через docker-compose/k8s,
 // а локально беремо значення з файлу Configuration.local.env
+
 var runningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 if (!runningInContainer)
     Env.Load(Path.Combine(builder.Environment.ContentRootPath, "Configuration.local.env"));
@@ -32,12 +31,14 @@ if (!runningInContainer)
 builder.Configuration.AddEnvironmentVariables();
 
 // --- додаємо базові сервіси ---
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // --- CORS ---
 // дозволяємо будь-які запити (для фронту/дебагу)
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -51,6 +52,7 @@ builder.Services.AddCors(options =>
 
 // --- БД ---
 // рядок з ENV або appsettings.json
+
 var cs = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULTCONNECTION")
          ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -61,14 +63,18 @@ builder.Services.AddDbContext<DbConnection>(options =>
     options.UseMySql(cs, new MySqlServerVersion(new Version(8, 0, 36)), o => o.EnableRetryOnFailure()));
 
 // --- gRPC + HttpClient ---
+
 builder.Services.AddGrpc();
 builder.Services.AddHttpClient();
 
 // --- сервіси авторизації ---
-builder.Services.AddSingleton<AuthService>();           // логіка авторизації Spotify
-builder.Services.AddSingleton<ITokenService, TokenService>(); // оновлення/отримання Spotify токенів
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<AuthService>();           // логіка авторизації Spotify
+builder.Services.AddScoped<ITokenService, TokenService>(); // оновлення/отримання Spotify токенів
 builder.Services.AddScoped<JwtService>();               // генерація JWT токенів для клієнта
-builder.Services.AddTransient<AuthorizationHandler>();  // додає Spotify access_token у HttpClient
+builder.Services.AddHttpContextAccessor();              // потрібен у AuthorizationHandler
+builder.Services.AddScoped<AuthorizationHandler>();  // додає Spotify access_token у HttpClient
 
 // --- HttpClient-и для роботи з Spotify API ---
 builder.Services.AddHttpClient<NewReleasesGrpcService>(client =>
@@ -95,25 +101,35 @@ builder.Services.AddHttpClient<RecommendationsGrpcService>(client =>
 }).AddHttpMessageHandler<AuthorizationHandler>();
 
 // --- gRPC клієнти ---
-builder.Services.AddSingleton<NewReleasesGrpcClient>(provider =>
+
+// --- gRPC клієнти без враперів ---
+// Recommendations
+builder.Services.AddGrpcClient<Spotify.Recommendations.SpotifyRecommendationsService.SpotifyRecommendationsServiceClient>(options =>
 {
-    var config = provider.GetRequiredService<IConfiguration>();
-    var grpcServiceUrl = config["GrpcServiceUrl"];
-    return new NewReleasesGrpcClient(grpcServiceUrl!);
+    var url = builder.Configuration["GrpcSettings:RecommendationsServiceUrl"]
+              ?? "http://localhost:5201";
+    Console.WriteLine($"[gRPC] Using RecommendationsServiceUrl: {url}");
+    options.Address = new Uri(url);
 });
 
-builder.Services.AddSingleton<ToDoAlbumGrpcClient>(provider =>
+// Albums
+builder.Services.AddGrpcClient<Spotify.ToDoAlbum.ToDoAlbumService.ToDoAlbumServiceClient>(options =>
 {
-    var config = provider.GetRequiredService<IConfiguration>();
-    var grpcServiceUrl = config["GrpcServiceUrl"];
-    return new ToDoAlbumGrpcClient(grpcServiceUrl!);
+    var url = builder.Configuration["GrpcSettings:AlbumServiceUrl"]
+              ?? "http://localhost:5201";
+    Console.WriteLine($"[gRPC] Using AlbumServiceUrl: {url}");
+    options.Address = new Uri(url);
 });
 
-// RecommendationsGrpcClient реєструємо через AddGrpcClient
-builder.Services.AddGrpcClient<RecommendationsGrpcClient>(options =>
+// New Releases
+builder.Services.AddGrpcClient<Spotify.Newrelease.NewReleasesService.NewReleasesServiceClient>(options =>
 {
-    options.Address = new Uri(builder.Configuration["GrpcSettings:RecommendationsServiceUrl"]!);
+    var url = builder.Configuration["GrpcSettings:ReleasesServiceUrl"]
+              ?? "http://localhost:5201";
+    Console.WriteLine($"[gRPC] Using ReleasesServiceUrl: {url}");
+    options.Address = new Uri(url);
 });
+
 
 // --- Налаштування Kestrel (порти для Swagger/gRPC) ---
 builder.WebHost.ConfigureKestrel(options =>

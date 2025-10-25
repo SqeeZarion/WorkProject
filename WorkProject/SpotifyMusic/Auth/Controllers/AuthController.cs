@@ -1,4 +1,6 @@
-﻿    namespace WorkProject.Auth.Controllers;
+﻿    using WorkProject.Auth.Interface;
+
+    namespace WorkProject.Auth.Controllers;
 
     using Microsoft.AspNetCore.Mvc;
     using WorkProject.Auth.Service;
@@ -8,10 +10,10 @@
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly JwtService _jwtService;
 
-        public AuthController(AuthService authService, UserService userService, JwtService jwtService)
+        public AuthController(AuthService authService, IUserService userService, JwtService jwtService)
         {
             _authService = authService;
             _userService = userService;

@@ -39,7 +39,7 @@ public class TokenService : ITokenService
         var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token")
         {
             //convert format for dictionary
-            Content = new FormUrlEncodedContent(new Dictionary<string, string>
+            Content = new FormUrlEncodedContent(new Dictionary<string, string?>
             {
                 { "grant_type", "refresh_token" },
                 { "refresh_token", user.RefreshToken },

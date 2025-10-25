@@ -15,9 +15,7 @@ public static class UserMappers
         e.Product = s.Product ?? e.Product;
         e.Href = s.Href ?? e.Href;
         e.Uri = s.Uri ?? e.Uri;
-        e.SpotifyProfileUrl = s.ExternalUrls != null && s.ExternalUrls.TryGetValue("spotify", out var url)
-            ? url
-            : e.SpotifyProfileUrl;
+        e.SpotifyProfileUrl = s.ExternalUrls.Spotify ?? e.SpotifyProfileUrl;
         e.ImageUrl = s.Images?.FirstOrDefault()?.Url ?? e.ImageUrl;
     }
 }

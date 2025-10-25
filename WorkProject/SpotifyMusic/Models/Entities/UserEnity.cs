@@ -10,20 +10,20 @@ public class UserEnity
 {
     [Key]
     public int UserId { get; set; }
-    public string SpotifyUserId { get; set; }
-    public string DisplayName { get; set; }
-    public string Email { get; set; }
-    public string Country { get; set; }
+    public string? SpotifyUserId { get; set; }
+    public string? DisplayName { get; set; }
+    public string? Email { get; set; }
+    public string? Country { get; set; }
     
-    public string SpotifyProfileUrl { get; set; }
-    public string ImageUrl { get; set; }
-    public string Product { get; set; } // Тип підписки: free, premium, open
+    public string? SpotifyProfileUrl { get; set; }
+    public string? ImageUrl { get; set; }
+    public string? Product { get; set; } // Тип підписки: free, premium, open
 
-    public string Uri { get; set; }
-    public string Href { get; set; }
+    public string? Uri { get; set; }
+    public string? Href { get; set; }
     
     // ✅ Only store refresh token
-    public string RefreshToken { get; set; }
+    public string? RefreshToken { get; set; }
 
     // ⏳ Optional — helps decide when to refresh
     public DateTime? TokenExpiresAt { get; set; }
